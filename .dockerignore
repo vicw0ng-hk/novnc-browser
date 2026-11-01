@@ -1,0 +1,2 @@
+# Allowlist: exclude everything, then re-include only what the Dockerfile copies.
+*
