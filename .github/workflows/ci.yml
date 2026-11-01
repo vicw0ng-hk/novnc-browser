@@ -34,8 +34,16 @@ jobs:
         run: pre-commit run --all-files --show-diff-on-failure --color=always
 
   docker:
-    name: Build and smoke test
-    runs-on: ubuntu-latest
+    name: Build and smoke test (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -47,7 +55,7 @@ jobs:
           context: .
           load: true
           tags: novnc-browser:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
       - name: Smoke test
         run: tests/smoke.sh novnc-browser:ci
