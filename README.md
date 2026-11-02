@@ -6,14 +6,15 @@ The image runs Chromium on a TigerVNC display with the openbox window manager, a
 ## Usage
 
 ```sh
-docker build --tag novnc-browser .
 docker run --detach --name novnc-browser \
   --publish 127.0.0.1:6080:6080 \
   --volume novnc-browser-profile:/home/browser/.config/chromium \
-  novnc-browser
+  ghcr.io/vicw0ng-hk/novnc-browser:latest
 ```
 
 Then open <http://localhost:6080>.
+
+Images are built for `linux/amd64` and `linux/arm64`. Each push to `master` that passes CI publishes `latest` and a `sha-<commit>` tag. Pin a `sha-` tag if you need reproducible deploys.
 
 The volume keeps the Chromium profile (logins, history, extensions) across container restarts. To use a host directory instead, make it writable by UID 1000.
 
